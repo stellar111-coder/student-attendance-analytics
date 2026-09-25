@@ -3,87 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Analytics Portal</title>
+    <title>Student Analytics & AI Risk Portal</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 30px; background-color: #f4f6f9; }
-        .container { max-width: 850px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; font-size: 24px; margin-bottom: 20px; }
-        h2 { color: #34495e; font-size: 18px; margin-top: 25px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; }
-        button:hover { background-color: #0056b3; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #e1e1e1; padding: 10px; text-align: left; }
-        th { background-color: #f8f9fa; color: #333; }
-        .risk-at-risk { color: #d9534f; font-weight: bold; }
-        .risk-safe { color: #5cb85c; font-weight: bold; }
-        .stats-box { background: #e9ecef; padding: 12px; border-radius: 4px; margin-top: 20px; font-size: 15px; }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-blue);
+        }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #0284c7, #7e22ce);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Dashboard Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .stat-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-muted);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-pass { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .badge-fail { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        
+        .badge-safe { 
+            background: rgba(16, 185, 129, 0.15); 
+            color: var(--success); 
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .badge-risk { 
+            background: rgba(239, 68, 68, 0.15); 
+            color: var(--danger); 
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        /* Undo/Delete Button Styling */
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Student Attendance & Grade Analytics Portal</h1>
+    <header>
+        <h1>Student Analytics & AI Risk Portal</h1>
+        <p>Real-time academic evaluation with Scikit-learn predictive risk analysis</p>
+    </header>
 
-    <form id="studentForm">
-        <div class="form-group">
-            <label>Student Name</label>
-            <input type="text" id="name" placeholder="e.g. Rahul Sharma" required>
+    <!-- Stat Dashboard Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="stat-info">
+                <h3 id="classAvg">0.0</h3>
+                <p>Class Average Score</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Attendance (%)</label>
-            <input type="number" id="attendance" min="0" max="100" step="0.1" placeholder="e.g. 75" required>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info">
+                <h3 id="totalStudents">0</h3>
+                <p>Total Records</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Marks Score (0-100)</label>
-            <input type="number" id="marks" min="0" max="100" step="0.1" placeholder="e.g. 68" required>
+        <div class="stat-card">
+            <div class="stat-icon" style="color: var(--danger); background: rgba(239, 68, 68, 0.1);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="stat-info">
+                <h3 id="riskCount">0</h3>
+                <p>Students At Risk</p>
+            </div>
         </div>
-        <button type="submit">Submit Entry</button>
-    </form>
-
-    <div class="stats-box">
-        <strong>Overall Class Average:</strong> <span id="classAvg">0</span>
     </div>
 
-    <h2>Student Database Records</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Attendance</th>
-                <th>Marks</th>
-                <th>Status</th>
-                <th>Risk Prediction</th>
-            </tr>
-        </thead>
-        <tbody id="studentTableBody"></tbody>
-    </table>
+    <!-- Student Input Form -->
+    <div class="glass-card">
+        <div class="card-title">
+            <i class="fa-solid fa-user-plus"></i> Add Student Metrics
+        </div>
+        <form id="studentForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Student Full Name</label>
+                    <input type="text" id="name" placeholder="e.g. Alex Morgan" required>
+                </div>
+                <div class="form-group">
+                    <label>Attendance Rate (%)</label>
+                    <input type="number" id="attendance" min="0" max="100" step="0.1" placeholder="0 - 100" required>
+                </div>
+                <div class="form-group">
+                    <label>Marks Obtained</label>
+                    <input type="number" id="marks" min="0" max="100" step="0.1" placeholder="0 - 100" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-microchip"></i> Process & Save Record
+            </button>
+        </form>
+    </div>
+
+    <!-- Data Analytics Table -->
+    <div class="glass-card">
+        <div class="card-title">
+            <i class="fa-solid fa-chart-simple"></i> Analytics Registry
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student Name</th>
+                        <th>Attendance</th>
+                        <th>Marks</th>
+                        <th>Status</th>
+                        <th>ML Risk Prediction</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Dynamic Data Injected via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>
+    // Undo / Delete Entry Function
+    async function deleteStudent(id) {
+        if (confirm("Are you sure you want to delete or undo this entry?")) {
+            await fetch(`/api/students/${id}`, { method: 'DELETE' });
+            loadData(); // Refresh UI after deleting
+        }
+    }
+
     async function loadData() {
         const response = await fetch('/api/students');
         const data = await response.json();
         
+        // Update Summary Stats Cards
         document.getElementById('classAvg').innerText = data.class_average + ' / 100';
+        document.getElementById('totalStudents').innerText = data.students.length;
         
+        const atRiskTotal = data.students.filter(s => s.risk_level === 'At Risk').length;
+        document.getElementById('riskCount').innerText = atRiskTotal;
+        
+        // Populate Table Rows
         const tbody = document.getElementById('studentTableBody');
         tbody.innerHTML = '';
         
         data.students.forEach(student => {
             const row = document.createElement('tr');
-            const riskClass = student.risk_level === 'At Risk' ? 'risk-at-risk' : 'risk-safe';
             
+            const statusBadge = student.status === 'Pass' 
+                ? `<span class="badge badge-pass"><i class="fa-solid fa-check"></i> Pass</span>`
+                : `<span class="badge badge-fail"><i class="fa-solid fa-xmark"></i> Fail</span>`;
+
+            const riskBadge = student.risk_level === 'At Risk'
+                ? `<span class="badge badge-risk"><i class="fa-solid fa-triangle-exclamation"></i> At Risk</span>`
+                : `<span class="badge badge-safe"><i class="fa-solid fa-shield-halved"></i> Safe</span>`;
+
             row.innerHTML = `
-                <td>${student.id}</td>
-                <td>${student.name}</td>
+                <td style="color: var(--text-muted);">#${student.id}</td>
+                <td style="font-weight: 500;">${student.name}</td>
                 <td>${student.attendance}%</td>
                 <td>${student.marks}</td>
-                <td>${student.status}</td>
-                <td class="${riskClass}">${student.risk_level}</td>
+                <td>${statusBadge}</td>
+                <td>${riskBadge}</td>
+                <td>
+                    <button onclick="deleteStudent(${student.id})" class="btn-delete">
+                        <i class="fa-solid fa-rotate-left"></i> Undo
+                    </button>
+                </td>
             `;
             tbody.appendChild(row);
         });

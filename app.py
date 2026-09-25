@@ -92,6 +92,16 @@ def add_student():
 
     return jsonify({'message': 'Student added successfully!'}), 201
 
+# --- BACKEND DELETE / UNDO ROUTE ---
+@app.route('/api/students/<int:student_id>', methods=['DELETE'])
+def delete_student(student_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM students WHERE id = ?', (student_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Record deleted successfully!'}), 200
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
